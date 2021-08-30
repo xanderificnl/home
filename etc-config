@@ -29,8 +29,14 @@ in
   # The global useDHCP flag is deprecated, therefore explicitly set to false here.
   # Per-interface useDHCP will be mandatory in the future, so this generated config
   # replicates the default behaviour.
-  networking.useDHCP = false;
-  networking.interfaces.enp25s0.useDHCP = true;
+  #networking.useDHCP = false;
+  #networking.interfaces.enp25s0.useDHCP = true;
+
+  # Use networkd
+  networking.useNetworkd = true;
+  #networking.dhcpcd.enable = true;
+  #systemd.network.enable = true;
+  #systemd.network.links.enp25s0.enable = true;
 
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
@@ -121,6 +127,8 @@ in
        #dockerCompat = true;
      };
   };
+
+  nix.trustedUsers = [ "root" "xander" ];
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
