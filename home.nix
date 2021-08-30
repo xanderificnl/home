@@ -198,6 +198,13 @@ in {
   programs.starship = {
     package = pkgsUnstable.starship;
     enable = true;
+
+    settings = {
+      directory = {
+        truncation_length = 3;
+        truncate_to_repo = false;
+      };
+    };
   };
 
   programs.tmux = { enable = true; };
@@ -239,6 +246,10 @@ in {
       " rust
       let g:rustfmt_autosave = 1
 
+      " When reopening a file, return to the last opened line.
+      if has("autocmd")
+        au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
+      endif
     '';
   };
 
