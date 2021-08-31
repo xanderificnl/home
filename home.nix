@@ -41,7 +41,10 @@ in {
     pkgs.nixfmt
     pkgs.gh
     pkgs.latest.rustChannels.stable.rust
+    pkgs.podman-compose
     pkgsUnstable.jetbrains-mono
+    pkgsUnstable.zola
+    pkgsUnstable.skim
   ];
 
   nixpkgs.overlays = [ (final: previous: { kitty = pkgsUnstable.kitty; }) ];
@@ -224,13 +227,12 @@ in {
 
   programs.topgrade = { enable = true; };
 
-
-  programs.lazygit = { enable = true; };
-
   programs.zoxide = {
     package = pkgsUnstable.zoxide;
     enable = true;
   };
+
+  programs.lazygit = { enable = true; };
 
   # Git
   programs.git = {
