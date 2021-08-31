@@ -8,6 +8,8 @@ let
   # https://nixos.wiki/wiki/FAQ#How_can_I_install_a_package_from_unstable_while_remaining_on_the_stable_channel.3F
   pkgsUnstable = import <nixos-unstable> { config = config.nixpkgs.config; };
 in {
+  imports = [ ./neovim.nix ];
+
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 
@@ -215,42 +217,7 @@ in {
 
   programs.lazygit = { enable = true; };
 
-  programs.neovim = {
     enable = true;
-    plugins = with pkgs.vimPlugins; [
-      rainbow_parentheses
-      vim-indent-guides
-      gruvbox
-      vim-nix
-      rust-vim
-      syntastic
-    ];
-    extraConfig = ''
-      colorscheme gruvbox
-      set background=dark
-      let g:gruvbox_invert_indent_guides=1
-
-      set syntax
-      filetype plugin indent on
-
-      " syntastic
-      set statusline+=%#warningmsg#
-      set statusline+=%{SyntasticStatuslineFlag()}
-      set statusline+=%*
-
-      let g:syntastic_always_populate_loc_list = 1
-      let g:syntastic_auto_loc_list = 1
-      let g:syntastic_check_on_open = 1
-      let g:syntastic_check_on_wq = 0
-
-      " rust
-      let g:rustfmt_autosave = 1
-
-      " When reopening a file, return to the last opened line.
-      if has("autocmd")
-        au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
-      endif
-    '';
   };
 
   # Git
