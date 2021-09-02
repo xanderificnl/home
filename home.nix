@@ -8,7 +8,7 @@ let
   # https://nixos.wiki/wiki/FAQ#How_can_I_install_a_package_from_unstable_while_remaining_on_the_stable_channel.3F
   pkgsUnstable = import <nixos-unstable> { config = config.nixpkgs.config; };
 in {
-  imports = [ ./neovim.nix ];
+  imports = [ ./neovim.nix ./tmux.nix ];
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
@@ -213,19 +213,6 @@ in {
         truncate_to_repo = false;
       };
     };
-  };
-
-  programs.tmux = {
-    enable = true;
-    extraConfig = ''
-      # Set nushell
-      set-option -g default-shell "/run/current-system/sw/bin/nu"
-
-      # Set new panes to open in current directory
-      bind c new-window -c "#{pane_current_path}"
-      bind '"' split-window -c "#{pane_current_path}"
-      bind % split-window -h -c "#{pane_current_path}"
-    '';
   };
 
   programs.topgrade = { enable = true; };
