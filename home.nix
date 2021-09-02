@@ -218,6 +218,9 @@ in {
   programs.tmux = {
     enable = true;
     extraConfig = ''
+      # Set nushell
+      set-option -g default-shell "/run/current-system/sw/bin/nu"
+
       # Set new panes to open in current directory
       bind c new-window -c "#{pane_current_path}"
       bind '"' split-window -c "#{pane_current_path}"
