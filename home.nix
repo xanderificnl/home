@@ -204,7 +204,7 @@ in {
     enable = true;
     package = pkgsUnstable.nushell;
     settings = {
-      prompt = "starship_prompt";
+      prompt = "printf '\\033k%s\\033\\\\' (pwd | path split | last);starship_prompt";
       startup = [
         "mkdir ~/.cache/starship"
         "starship init nu | save ~/.cache/starship/init.nu"
