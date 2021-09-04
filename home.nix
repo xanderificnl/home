@@ -8,7 +8,7 @@ let
   # https://nixos.wiki/wiki/FAQ#How_can_I_install_a_package_from_unstable_while_remaining_on_the_stable_channel.3F
   pkgsUnstable = import <nixos-unstable> { config = config.nixpkgs.config; };
 in {
-  imports = [ ./neovim.nix ./tmux.nix ];
+  imports = [ ./kakoune.nix ./neovim.nix ./tmux.nix ];
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
@@ -45,7 +45,32 @@ in {
     pkgsUnstable.jetbrains-mono
     pkgsUnstable.zola
     pkgsUnstable.skim
+    pkgsUnstable.rnix-lsp
+    pkgsUnstable.file
   ];
+
+  # nix-env -f '<nixpkgs>' -qaP -A kakounePlugins
+  # programs.kakoune = {
+  #   enable = true;
+  #   config = {
+  #     colorScheme = "gruvbox";
+  #     ui.enableMouse = false;
+  #   };
+  #   plugins = with pkgsUnstable.kakounePlugins; [
+  #     kak-lsp
+  #   ];
+  #   extraConfig = ''
+  #     # LSP
+  #     eval %sh{kak-lsp --kakoune -s $kak_session}
+  #     hook global WinSetOption filetype=(rust|python|go|javascript|typescript) %{
+  #             lsp-enable-window
+  #     }
+
+  #     ## Auto format files on save
+  #     #hook global WinSetOption filetype=
+      
+  #   '';
+  # };
 
   nixpkgs.overlays = [ (final: previous: { kitty = pkgsUnstable.kitty; }) ];
 
@@ -197,9 +222,11 @@ in {
       color_mode = "enabled";
 
       env = {
-        EDITOR = "nvim";
+        EDITOR = "kak";
         JQ_COLORS = "1;30:0;37:0;37:0;37:0;32:1;37:1;37";
       };
+
+
     };
   };
 
