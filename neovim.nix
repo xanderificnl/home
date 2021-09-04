@@ -44,6 +44,8 @@ in
       nvim-lspconfig
       lspsaga-nvim
       hop-nvim
+      vim-racket
+      vim-sandwich
     ];
     extraConfig = ''
       colorscheme gruvbox
