@@ -194,9 +194,9 @@ in {
   programs.man = { enable = true; };
 
   # TODO: https://github.com/nix-community/home-manager/blob/master/modules/programs/irssi.nix
-  #programs.irssi = {
-  #  enable = true;
-  #};
+  programs.irssi = {
+    enable = true;
+  };
 
   programs.jq = { enable = true; };
 
