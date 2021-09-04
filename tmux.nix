@@ -7,6 +7,9 @@ in {
   programs.tmux = {
     enable = true;
     extraConfig = ''
+      # Ensure we're getting full color support
+      set -g default-terminal "tmux-256color" # "screen-256color"
+
       # Allow mouse control
       set -g mouse on 
 
@@ -18,11 +21,23 @@ in {
       bind '"' split-window -c "#{pane_current_path}"
       bind % split-window -h -c "#{pane_current_path}"
 
-      # tmux pain control 
-      run-shell ~/Projects/github.com/tmux-plugins/tmux-pain-control/pain_control.tmux
+      # Write to all panes
+      bind -n C-x setw synchronize-panes
 
-      # tmux resurrect
-      run-shell ~/Projects/github.com/tmux-plugins/tmux-resurrect/resurrect.tmux
+      # tmux pain control 
+      run-shell ~/.config/nixpkgs/src/tmux/pain_control.tmux
+
+      # gruvbox
+      #set-option -as terminal-overrides ",xterm*:RGB"
+      source-file ~/.config/nixpkgs/src/tmux/gruvbox.tmux
+
+      # Update window titles
+      set -g terminal-overrides "xterm*:XT:smcup@:rmcup@"
+
+      #set -g set-titles on 
+      #set -g set-titles-string "#T"
+      #set-option -g automatic-rename on 
+      #set-option -g allow-rename on 
     '';
   };
 }
