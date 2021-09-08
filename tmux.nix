@@ -1,9 +1,6 @@
 { config, ... }:
 
-let
-  # https://nixos.wiki/wiki/FAQ#How_can_I_install_a_package_from_unstable_while_remaining_on_the_stable_channel.3F
-  pkgsUnstable = import <nixos-unstable> { config = config.nixpkgs.config; };
-in{
+{
   programs.tmux = {
     enable = true;
     extraConfig = ''
@@ -34,10 +31,14 @@ in{
       # Update window titles
       set -g terminal-overrides "xterm*:XT:smcup@:rmcup@"
 
-      #set -g set-titles on 
+      set -g set-titles on 
       #set -g set-titles-string "#T"
-      #set-option -g automatic-rename on 
-      #set-option -g allow-rename on 
+      set-option -g automatic-rename on 
+      set-option -g allow-rename on
+
+      # Stop being weird tmux!
+      set -ga terminal-overrides ",*col*:Tc"
+      set -sg escape-time 25
     '';
   };
 }

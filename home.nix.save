@@ -2,12 +2,10 @@
 
 let
   moz_overlay = import (builtins.fetchTarball https://github.com/mozilla/nixpkgs-mozilla/archive/master.tar.gz);
-  pkgs = import <nixpkgs> { overlays = [ moz_overlay ]; };
 
-  editor = "kak -e ide";
-in
-{
-  imports = [ ./kakoune.nix ./kitty.nix ];
+  pkgs = import <nixpkgs> { overlays = [ moz_overlay ]; };
+in {
+  imports = [ ./kakoune.nix ./neovim.nix ./tmux.nix ];
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
@@ -46,8 +44,6 @@ in
     pkgs.skim
     pkgs.rnix-lsp
     pkgs.file
-    pkgs.deno
-    pkgs.editorconfig-core-c
   ];
 
   # nix-env -f '<nixpkgs>' -qaP -A kakounePlugins
@@ -69,64 +65,46 @@ in
 
   #     ## Auto format files on save
   #     #hook global WinSetOption filetype=
-
+      
   #   '';
   # };
 
   #nixpkgs.overlays = [ (final: previous: { kitty = kitty; }) ];
 
-  # programs.kitty = {
-  # enable = true;
-  # settings = {
-  # scrollback_lines = 10000;
-  # enable_audio_bell = false;
-  # update_check_interval = 0;
-  # font_family = "JetBrains Mono";
-  # disable_ligatures = "cursor";
-  #adjust_line_height = "92%";
-  # hide_window_decorations = "yes";
-  # font_size = "12.5";
-  # background = "#272727";
-  # color0 = "#272727";
-  # color10 = "#b8ba25";
-  # color11 = "#fabc2e";
-  # color12 = "#83a597";
-  # color13 = "#d3859a";
-  # color14 = "#8ec07b";
-  # color15 = "#ebdbb2";
-  # color1 = "#cc231c";
-  # color2 = "#989719";
-  # color3 = "#d79920";
-  # color4 = "#448488";
-  # color5 = "#b16185";
-  # color6 = "#689d69";
-  # color7 = "#a89983";
-  # color8 = "#928373";
-  # color9 = "#fb4833";
-  # foreground = "#ebdbb2";
-  # selection_background = "#ebdbb2";
-  # selection_foreground = "#655b53";
-  # url_color = "#d65c0d";
-  # };
-
-  # extraConfig = ''
-  # enabled_layouts splits:split_axis=horizontal
-  # 
-  # map F5 launch --location=hsplit
-  # map F6 launch --location=vsplit
-  # map F7 layout_action rotate
-
-  # map shift+up move_window up
-  # map shift+left move_window left
-  # map shift+right move_window right
-  # map shift+down move_window down
-
-  # map ctrl+left neighboring_window left
-  # map ctrl+right neighboring_window right
-  # map ctrl+up neighboring_window up
-  # map ctrl+down neighboring_window down
-  # '';
-  # };
+  programs.kitty = {
+    enable = true;
+    settings = {
+      scrollback_lines = 10000;
+      enable_audio_bell = false;
+      update_check_interval = 0;
+      font_family = "JetBrains Mono";
+      disable_ligatures = "cursor";
+      #adjust_line_height = "92%";
+      hide_window_decorations = "yes";
+      font_size = "12.5";
+      background = "#272727";
+      color0 = "#272727";
+      color10 = "#b8ba25";
+      color11 = "#fabc2e";
+      color12 = "#83a597";
+      color13 = "#d3859a";
+      color14 = "#8ec07b";
+      color15 = "#ebdbb2";
+      color1 = "#cc231c";
+      color2 = "#989719";
+      color3 = "#d79920";
+      color4 = "#448488";
+      color5 = "#b16185";
+      color6 = "#689d69";
+      color7 = "#a89983";
+      color8 = "#928373";
+      color9 = "#fb4833";
+      foreground = "#ebdbb2";
+      selection_background = "#ebdbb2";
+      selection_foreground = "#655b53";
+      url_color = "#d65c0d";
+    };
+  };
 
   programs.alacritty = {
     enable = false;
@@ -222,21 +200,14 @@ in
   programs.nushell = {
     enable = true;
     settings = {
-      prompt = "echo [(ansi -o '0') (win_title) (char bel)] | str collect; starship_prompt";
+      prompt = "printf '\\033k%s\\033\\\\' (pwd | path split | last);starship_prompt";
       startup = [
-        "def win_title [] { basename $nu.cwd }"
-        #"def starship_precmd_user_func [] { echo [(ansi -o '0') (basename $nu.cwd) (char bel)] | str collect }"
         "mkdir ~/.cache/starship"
         "starship init nu | save ~/.cache/starship/init.nu"
         "source ~/.cache/starship/init.nu"
 
         "zoxide init nushell --hook prompt | save ~/.zoxide.nu"
         "source ~/.zoxide.nu"
-
-        "alias k = ${editor}"
-        "alias nvim = false"
-        "alias nano = false"
-        "alias cd = echo 'use: z'"
       ];
 
       ctrlc_exit = false;
@@ -247,9 +218,9 @@ in
       color_mode = "enabled";
 
       env = {
-        EDITOR = "${editor}";
+        EDITOR = "kak";
         JQ_COLORS = "1;30:0;37:0;37:0;37:0;32:1;37:1;37";
-        NIXPKGS_PATH = "https://github.com/NixOS/nixpkgs/archive/refs/heads/master.tar.gz";
+	NIXPKGS_PATH = "https://github.com/NixOS/nixpkgs/archive/refs/heads/master.tar.gz"
       };
 
 
@@ -262,10 +233,7 @@ in
     settings = {
       directory = {
         truncation_length = 3;
-        truncate_to_repo = true;
-      };
-      status = {
-        disabled = true;
+        truncate_to_repo = false;
       };
     };
   };
@@ -333,7 +301,7 @@ in
     # See also: #456, #789
 
     # More information here: https://chris.beams.io/posts/git-commit/
-  '';
+      '';
 
   # This value determines the Home Manager release that your
   # configuration is compatible with. This helps avoid breakage

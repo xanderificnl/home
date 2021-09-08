@@ -1,7 +1,6 @@
 { config, pkgs, ... }:
 
 let
- pkgsUnstable = import <nixos-unstable> { config = config.nixpkgs.config; };
   zig        = pkgs.vimUtils.buildVimPlugin {
     name     = "zig";
     src      = pkgs.fetchFromGitHub {
@@ -22,7 +21,7 @@ in
 
   programs.neovim = {
     enable = true;
-    plugins = with pkgsUnstable.vimPlugins; [
+    plugins = with pkgs.vimPlugins; [
       rainbow_parentheses
       vim-indent-guides
       gruvbox
